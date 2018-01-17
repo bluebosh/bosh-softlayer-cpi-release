@@ -64,20 +64,22 @@ func (cv CreateVM) Run(agentID string, stemcellCID StemcellCID, cloudProps VMClo
 		return "", bosherr.WrapErrorf(err, "Finding stemcell uuid with id '%d'", stemcellCID.Int())
 	}
 
-	// Set public key
-	var sshKey int
-	if len(cv.softlayerOptions.PublicKey) > 0 {
-		sshKey, err = cv.virtualGuestService.CreateSshKey("bosh_cpi", cv.softlayerOptions.PublicKey, cv.softlayerOptions.PublicKeyFingerPrint)
-		if err != nil {
-			return "", bosherr.WrapErrorf(err, "Creating Public Key with content '%s'", cv.softlayerOptions.PublicKey)
-		}
-		cloudProps.SshKey = sshKey
-	}
+	//// Set public key
+	//var sshKey int
+	//if len(cv.softlayerOptions.PublicKey) > 0 {
+	//	sshKey, err = cv.virtualGuestService.CreateSshKey("bosh_cpi", cv.softlayerOptions.PublicKey, cv.softlayerOptions.PublicKeyFingerPrint)
+	//	if err != nil {
+	//		return "", bosherr.WrapErrorf(err, "Creating Public Key with content '%s'", cv.softlayerOptions.PublicKey)
+	//	}
+	//	cloudProps.SshKey = sshKey
+	//}
 
-	userDataContents, err := cv.createUserDataForInstance(agentID, &cv.registryOptions, cloudProps.DeployedByBoshCLI)
-	if err != nil {
-		return "", bosherr.WrapError(err, "Creating VM UserData")
-	}
+	// @TODO Remove userData after registry removal
+	userDataContents := ""
+	//userDataContents, err := cv.createUserDataForInstance(agentID, &cv.registryOptions, cloudProps.DeployedByBoshCLI)
+	//if err != nil {
+	//	return "", bosherr.WrapError(err, "Creating VM UserData")
+	//}
 
 	// Inspect networks to get NetworkComponents
 	publicNetworkComponent, privateNetworkComponent, err := cv.getNetworkComponents(networks)
@@ -217,12 +219,12 @@ func (cv CreateVM) createVirtualGuestTemplate(stemcellUuid string, cloudProps VM
 		PrimaryNetworkComponent:        publicNetworkComponent,
 		PrimaryBackendNetworkComponent: privateNetworkComponent,
 
-		// metadata or user data
-		UserData: []datatypes.Virtual_Guest_Attribute{
-			{
-				Value: sl.String(userData),
-			},
-		},
+		//// metadata or user data
+		//UserData: []datatypes.Virtual_Guest_Attribute{
+		//	{
+		//		Value: sl.String(userData),
+		//	},
+		//},
 	}
 
 	if cloudProps.FlavorKeyName != "" {
@@ -387,11 +389,11 @@ func (cv CreateVM) createByOsReload(stemcellCID StemcellCID, cloudProps VMCloudP
 						return cid, bosherr.WrapError(err, "Upgrading VM")
 					}
 				}
-				//Update userData when OS Reload
-				err = cv.virtualGuestService.UpdateInstanceUserData(*vm.Id, sl.String(userDataContents))
-				if err != nil {
-					return cid, bosherr.WrapError(err, "Updating userData")
-				}
+				////Update userData when OS Reload
+				//err = cv.virtualGuestService.UpdateInstanceUserData(*vm.Id, sl.String(userDataContents))
+				//if err != nil {
+				//	return cid, bosherr.WrapError(err, "Updating userData")
+				//}
 
 				err = cv.virtualGuestService.ReloadOS(*vm.Id, stemcellCID.Int(), []int{cloudProps.SshKey}, cloudProps.HostnamePrefix, cloudProps.Domain)
 				if err != nil {

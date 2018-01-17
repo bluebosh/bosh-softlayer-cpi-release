@@ -37,6 +37,9 @@ properties:
   softlayer.swift_endpoint:
     description: Endpoint of the SWIFT object service
 
+  registry.use_softlayer_metadata:
+    description: "SoftLayer metadata should be used instead of BOSH registry"
+    default: true
   registry.username:
     description: User to access the Registry
     default: "admin"

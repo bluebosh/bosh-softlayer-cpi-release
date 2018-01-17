@@ -26,6 +26,9 @@ type SoftlayerUserDataDNSItems struct {
 
 // ClientOptions are the options used to create a BOSH Registry client.
 type ClientOptions struct {
+	// Use SoftLayer metadata instead of BOSH registry
+	UseSoftlayerMetadata bool `json:"use_softlayer_metadata,omitempty"`
+
 	// BOSH Registry protocol
 	Protocol string `json:"protocol,omitempty"`
 

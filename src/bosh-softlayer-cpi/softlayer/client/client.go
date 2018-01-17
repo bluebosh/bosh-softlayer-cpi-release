@@ -130,6 +130,7 @@ type Client interface {
 	WaitVolumeProvisioningWithOrderId(orderId int, until time.Time) (*datatypes.Network_Storage, error)
 	SetTags(id int, tags string) (bool, error)
 	SetInstanceMetadata(id int, userData *string) (bool, error)
+	GetInstanceMetadata(id int) (string, error)
 	AttachSecondDiskToInstance(id int, diskSize int) error
 	GetInstanceAllowedHost(id int) (*datatypes.Network_Storage_Allowed_Host, bool, error)
 	AuthorizeHostToVolume(instance *datatypes.Virtual_Guest, volumeId int, until time.Time) (bool, error)
@@ -1755,6 +1756,25 @@ func (c *ClientManager) SetInstanceMetadata(id int, userData *string) (bool, err
 	return true, nil
 }
 
+func (c *ClientManager) GetInstanceMetadata(id int) (string, error) {
+	filters := filter.New()
+	filters = append(filters, filter.Path("type.keyname").Eq("USER_DATA"))
+	userData, err := c.VirtualGuestService.Id(id).Filter(filters.Build()).GetUserData()
+	if err != nil {
+		if apiErr, ok := err.(sl.Error); ok {
+			if apiErr.Exception == SOFTLAYER_OBJECTNOTFOUND_EXCEPTION {
+				return "", nil
+			}
+			return "", err
+		}
+	}
+
+	for _, data := range userData {
+		return *data.Value, nil
+	}
+	return "", bosherr.Error(fmt.Sprintf("Empty userdata of '%d'", id))
+}
+
 func (c *ClientManager) CreateSwiftContainer(containerName string) error {
 	c.logger.Debug(softlayerClientLogTag, "Create a Swift container name '%s'", containerName)
 
@@ -1845,10 +1865,10 @@ func (c *ClientManager) CreateImageFromExternalSource(imageName string, note str
 	//uri := "swift://${OBJ_STORAGE_ACC_NAME}@${SWIFT_CLUSTER}/${SWIFT_CONTAINER}/bosh-stemcell-${STEMCELL_VERSION}-softlayer.vhd"
 	uri := fmt.Sprintf("swift://%s@%s/%s/%s.vhd", accountName, cluster, imageName, imageName)
 	configuration := &datatypes.Container_Virtual_Guest_Block_Device_Template_Configuration{
-		Name: sl.String(imageName),
-		Note: sl.String(note),
+		Name:                         sl.String(imageName),
+		Note:                         sl.String(note),
 		OperatingSystemReferenceCode: sl.String(osCode),
-		Uri: sl.String(uri),
+		Uri:                          sl.String(uri),
 	}
 
 	vgbdtgObject, err := c.ImageService.CreateFromExternalSource(configuration)

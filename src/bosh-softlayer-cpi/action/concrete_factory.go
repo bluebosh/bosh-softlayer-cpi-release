@@ -26,10 +26,22 @@ func NewConcreteFactory(
 	logger logger.Logger,
 ) concreteFactory {
 
-	registryClient := registry.NewHTTPClient(
-		cfg.Cloud.Properties.Registry,
-		logger,
-	)
+	// Choose the correct registry.Client based on the
+	// value of ClientOptions.UseSoftlayerMetadata
+	var registryClient registry.Client
+	switch cfg.Cloud.Properties.Registry.UseSoftlayerMetadata {
+	case true:
+		registryClient = registry.NewMetadataClient(
+			cfg.Cloud.Properties.Registry,
+			logger,
+			softlayerClient,
+		)
+	default:
+		registryClient = registry.NewHTTPClient(
+			cfg.Cloud.Properties.Registry,
+			logger,
+		)
+	}
 
 	diskService := disk.NewSoftlayerDiskService(
 		softlayerClient,
