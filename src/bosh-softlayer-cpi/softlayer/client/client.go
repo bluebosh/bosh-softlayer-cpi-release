@@ -1769,6 +1769,7 @@ func (c *ClientManager) GetInstanceMetadata(id int) (string, error) {
 		}
 	}
 
+	// Return the latest userData
 	for _, data := range userData {
 		return *data.Value, nil
 	}

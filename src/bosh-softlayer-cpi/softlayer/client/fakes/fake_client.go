@@ -245,6 +245,19 @@ type FakeClient struct {
 		result1 bool
 		result2 error
 	}
+	GetInstanceMetadataStub        func(id int) (string, error)
+	getInstanceMetadataMutex       sync.RWMutex
+	getInstanceMetadataArgsForCall []struct {
+		id int
+	}
+	getInstanceMetadataReturns struct {
+		result1 string
+		result2 error
+	}
+	getInstanceMetadataReturnsOnCall map[int]struct {
+		result1 string
+		result2 error
+	}
 	AttachSecondDiskToInstanceStub        func(id int, diskSize int) error
 	attachSecondDiskToInstanceMutex       sync.RWMutex
 	attachSecondDiskToInstanceArgsForCall []struct {
@@ -1542,6 +1555,57 @@ func (fake *FakeClient) SetInstanceMetadataReturnsOnCall(i int, result1 bool, re
 	}
 	fake.setInstanceMetadataReturnsOnCall[i] = struct {
 		result1 bool
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeClient) GetInstanceMetadata(id int) (string, error) {
+	fake.getInstanceMetadataMutex.Lock()
+	ret, specificReturn := fake.getInstanceMetadataReturnsOnCall[len(fake.getInstanceMetadataArgsForCall)]
+	fake.getInstanceMetadataArgsForCall = append(fake.getInstanceMetadataArgsForCall, struct {
+		id int
+	}{id})
+	fake.recordInvocation("GetInstanceMetadata", []interface{}{id})
+	fake.getInstanceMetadataMutex.Unlock()
+	if fake.GetInstanceMetadataStub != nil {
+		return fake.GetInstanceMetadataStub(id)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fake.getInstanceMetadataReturns.result1, fake.getInstanceMetadataReturns.result2
+}
+
+func (fake *FakeClient) GetInstanceMetadataCallCount() int {
+	fake.getInstanceMetadataMutex.RLock()
+	defer fake.getInstanceMetadataMutex.RUnlock()
+	return len(fake.getInstanceMetadataArgsForCall)
+}
+
+func (fake *FakeClient) GetInstanceMetadataArgsForCall(i int) int {
+	fake.getInstanceMetadataMutex.RLock()
+	defer fake.getInstanceMetadataMutex.RUnlock()
+	return fake.getInstanceMetadataArgsForCall[i].id
+}
+
+func (fake *FakeClient) GetInstanceMetadataReturns(result1 string, result2 error) {
+	fake.GetInstanceMetadataStub = nil
+	fake.getInstanceMetadataReturns = struct {
+		result1 string
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeClient) GetInstanceMetadataReturnsOnCall(i int, result1 string, result2 error) {
+	fake.GetInstanceMetadataStub = nil
+	if fake.getInstanceMetadataReturnsOnCall == nil {
+		fake.getInstanceMetadataReturnsOnCall = make(map[int]struct {
+			result1 string
+			result2 error
+		})
+	}
+	fake.getInstanceMetadataReturnsOnCall[i] = struct {
+		result1 string
 		result2 error
 	}{result1, result2}
 }
@@ -3106,6 +3170,8 @@ func (fake *FakeClient) Invocations() map[string][][]interface{} {
 	defer fake.setTagsMutex.RUnlock()
 	fake.setInstanceMetadataMutex.RLock()
 	defer fake.setInstanceMetadataMutex.RUnlock()
+	fake.getInstanceMetadataMutex.RLock()
+	defer fake.getInstanceMetadataMutex.RUnlock()
 	fake.attachSecondDiskToInstanceMutex.RLock()
 	defer fake.attachSecondDiskToInstanceMutex.RUnlock()
 	fake.getInstanceAllowedHostMutex.RLock()

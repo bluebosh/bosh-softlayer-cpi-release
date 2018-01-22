@@ -2332,7 +2332,7 @@ var _ = Describe("InstanceHandler", func() {
 	})
 
 	Describe("SetInstanceMetadata", func() {
-		Context("when VirtualGuestService EditObject call successfully", func() {
+		Context("when VirtualGuestService SetUserMetadata call successfully", func() {
 			It("set instance's metadata successfully", func() {
 				respParas = []map[string]interface{}{
 					{
@@ -2353,7 +2353,7 @@ var _ = Describe("InstanceHandler", func() {
 			})
 		})
 
-		Context("when VirtualGuestService EditObject call return error", func() {
+		Context("when VirtualGuestService SetUserMetadata call return error", func() {
 			It("edit instance successfully", func() {
 				respParas = []map[string]interface{}{
 					{
@@ -2406,6 +2406,55 @@ var _ = Describe("InstanceHandler", func() {
 				Expect(err.Error()).To(ContainSubstring("Waiting until instance is ready"))
 				Expect(succ).To(BeFalse())
 				Expect(err.Error()).To(ContainSubstring("Waiting until instance is ready"))
+			})
+		})
+	})
+
+	Describe("GetInstanceMetadata", func() {
+		Context("when VirtualGuestService GetUserData call successfully", func() {
+			It("set instance's metadata successfully", func() {
+				respParas = []map[string]interface{}{
+					{
+						"filename":   "SoftLayer_Virtual_Guest_getUserMetadata.json",
+						"statusCode": http.StatusOK,
+					},
+				}
+				err = test_helpers.SpecifyServerResps(respParas, server)
+				Expect(err).NotTo(HaveOccurred())
+
+				_, err := cli.GetInstanceMetadata(vgID)
+				Expect(err).NotTo(HaveOccurred())
+			})
+		})
+
+		Context("when VirtualGuestService GetUserData call return error", func() {
+			It("edit instance successfully", func() {
+				respParas = []map[string]interface{}{
+					{
+						"filename":   "SoftLayer_Virtual_Guest_getUserMetadata_InternalError.json",
+						"statusCode": http.StatusInternalServerError,
+					},
+				}
+				err = test_helpers.SpecifyServerResps(respParas, server)
+				Expect(err).NotTo(HaveOccurred())
+
+				_, err := cli.GetInstanceMetadata(vgID)
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(ContainSubstring("fake-client-error"))
+			})
+
+			It("edit instance successfully", func() {
+				respParas = []map[string]interface{}{
+					{
+						"filename":   "SoftLayer_Virtual_Guest_getUserMetadata_NotFound.json",
+						"statusCode": http.StatusInternalServerError,
+					},
+				}
+				err = test_helpers.SpecifyServerResps(respParas, server)
+				Expect(err).NotTo(HaveOccurred())
+
+				_, err := cli.GetInstanceMetadata(vgID)
+				Expect(err).NotTo(HaveOccurred())
 			})
 		})
 	})
