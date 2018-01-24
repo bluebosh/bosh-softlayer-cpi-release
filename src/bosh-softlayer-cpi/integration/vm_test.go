@@ -51,7 +51,7 @@ var _ = Describe("VM", func() {
 		Expect(resp.Error.Message).ToNot(BeEmpty())
 	})
 
-	FIt("executes the VM lifecycle", func() {
+	It("executes the VM lifecycle", func() {
 		var vmCID string
 		By("creating a VM")
 		request := fmt.Sprintf(`{
@@ -100,32 +100,32 @@ var _ = Describe("VM", func() {
 		exists := assertSucceedsWithResult(request).(bool)
 		Expect(exists).To(Equal(true))
 
-		//By("Setting the metadata")
-		//request = fmt.Sprintf(`{
-		//  "method": "set_vm_metadata",
-		//  "arguments": [
-		//    "%v",
-		//    {
-		//      "cpi": "softlayer-cpi",
-		//      "test-job": "integration"
-		//    }
-		//  ]
-		//}`, vmCID)
-		//assertSucceeds(request)
-		//
-		//By("rebooting the VM")
-		//request = fmt.Sprintf(`{
-		//  "method": "reboot_vm",
-		//  "arguments": ["%v"]
-		//}`, vmCID)
-		//assertSucceeds(request)
-		//
-		//By("deleting the VM")
-		//request = fmt.Sprintf(`{
-		//  "method": "delete_vm",
-		//  "arguments": ["%v"]
-		//}`, vmCID)
-		//assertSucceeds(request)
+		By("Setting the metadata")
+		request = fmt.Sprintf(`{
+		  "method": "set_vm_metadata",
+		  "arguments": [
+		    "%v",
+		    {
+		      "cpi": "softlayer-cpi",
+		      "test-job": "integration"
+		    }
+		  ]
+		}`, vmCID)
+		assertSucceeds(request)
+
+		By("rebooting the VM")
+		request = fmt.Sprintf(`{
+		  "method": "reboot_vm",
+		  "arguments": ["%v"]
+		}`, vmCID)
+		assertSucceeds(request)
+
+		By("deleting the VM")
+		request = fmt.Sprintf(`{
+		  "method": "delete_vm",
+		  "arguments": ["%v"]
+		}`, vmCID)
+		assertSucceeds(request)
 	})
 
 	It("can create a VM by flavor", func() {
