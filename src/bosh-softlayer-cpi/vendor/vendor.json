@@ -179,10 +179,12 @@
 			"revisionTime": "2016-10-28T10:15:48Z"
 		},
 		{
-			"checksumSHA1": "2b8Jx8cq66ZrpgE4M0asbAwunC0=",
+			"checksumSHA1": "YiTSUaO2gnxv79oogZlWzSPCWwc=",
 			"path": "github.com/maximilien/softlayer-go/client",
-			"revision": "c0c00474ea779522db4d753a5d932df5d9e09658",
-			"revisionTime": "2017-06-05T04:21:36Z"
+			"revision": "8155c7d290022691c45fe3bc463117ec3b1b362c",
+			"revisionTime": "2018-02-25T03:16:23Z",
+			"version": "tls_12",
+			"versionExact": "tls_12"
 		},
 		{
 			"checksumSHA1": "MLINP/4ftv+/byowTNRvgeYomOU=",
