@@ -118,4 +118,18 @@ var _ = Describe("Config", func() {
 			Expect(err.Error()).To(ContainSubstring("Validating Cloud Properties"))
 		})
 	})
+
+	FDescribe("HideCredentials", func() {
+		BeforeEach(func() {
+			config = validConfig
+		})
+
+		It("Return string which hides credential", func() {
+			configString, err := config.GetHidenCredentialString()
+			Expect(err).ToNot(HaveOccurred())
+			Expect(configString).To(ContainSubstring("api_key\":\"************"))
+			Expect(configString).To(ContainSubstring("vcap_password\":\"************"))
+			Expect(configString).To(ContainSubstring("password\":\"************"))
+		})
+	})
 })

@@ -47,6 +47,14 @@ func main() {
 		os.Exit(1)
 	}
 
+	cfgStr, err := cfg.GetHidenCredentialString()
+	if err != nil {
+		logger.Error(logTagMain, "Hide config", err.Error())
+		os.Exit(1)
+	}
+
+	logger.Debug(logTagMain, "Loading config %s", cfgStr)
+
 	dispatch := buildDispatcher(cfg, logger, outLogger, uuid, cmdRunner)
 
 	cli := transport.NewCLI(os.Stdin, os.Stdout, dispatch, logger)

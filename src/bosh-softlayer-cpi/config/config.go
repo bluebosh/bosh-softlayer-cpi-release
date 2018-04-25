@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"regexp"
 
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
@@ -20,9 +21,9 @@ type Cloud struct {
 }
 
 type CPIProperties struct {
-	SoftLayer boslconfig.Config
-	Agent     registry.AgentOptions
-	Registry  registry.ClientOptions
+	SoftLayer boslconfig.Config      `json:"softlayer"`
+	Agent     registry.AgentOptions  `json:"agent"`
+	Registry  registry.ClientOptions `json:"registry"`
 }
 
 func NewConfigFromPath(configFile string, fs boshsys.FileSystem) (Config, error) {
@@ -32,7 +33,7 @@ func NewConfigFromPath(configFile string, fs boshsys.FileSystem) (Config, error)
 		return config, bosherr.Errorf("Must provide a config file")
 	}
 
-	bytes, err := fs.ReadFile(configFile)
+	bytes, err := fs.ReadFileWithOpts(configFile, boshsys.ReadOpts{Quiet: true})
 	if err != nil {
 		return config, bosherr.WrapErrorf(err, "Reading config file '%s'", configFile)
 	}
@@ -81,4 +82,15 @@ func (c Config) Validate() error {
 	//}
 
 	return nil
+}
+
+func (c Config) GetHidenCredentialString() (string, error) {
+	hiddenStr := "\"$1\":\"************\""
+	r := regexp.MustCompile("\"(api_key|password|vcap_password|secret_access_key)\":\"([\\w$\\/.-]*)\"")
+	str, err := json.Marshal(c)
+	if err != nil {
+		return "", bosherr.WrapErrorf(err, "Marshaling request body")
+	}
+
+	return r.ReplaceAllString(string(str), hiddenStr), nil
 }

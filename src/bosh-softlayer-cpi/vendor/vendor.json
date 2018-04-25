@@ -71,16 +71,16 @@
 			"revisionTime": "2017-07-07T00:05:06Z"
 		},
 		{
-			"checksumSHA1": "hqrqPN4jmumQ1D5adbqxfRa9tns=",
+			"checksumSHA1": "mcInUsXM3dNh8rfU8yrKWrp+ja8=",
 			"path": "github.com/cloudfoundry/bosh-utils/system",
-			"revision": "c9f356b84a809b355b264a565216fcd7267acdf1",
-			"revisionTime": "2017-07-07T00:05:06Z"
+			"revision": "2c869a1a0ccef38c01c41d833db6eb02a23bd6e6",
+			"revisionTime": "2018-04-13T21:25:38Z"
 		},
 		{
-			"checksumSHA1": "r5KcJ2fG0sM7Syw8seqH6eBqAL0=",
+			"checksumSHA1": "eDHNuoDclSSejMN5RtNndkxNTPg=",
 			"path": "github.com/cloudfoundry/bosh-utils/system/fakes",
-			"revision": "c9f356b84a809b355b264a565216fcd7267acdf1",
-			"revisionTime": "2017-07-07T00:05:06Z"
+			"revision": "2c869a1a0ccef38c01c41d833db6eb02a23bd6e6",
+			"revisionTime": "2018-04-13T21:25:38Z"
 		},
 		{
 			"checksumSHA1": "PiQWNb57zalJJYAqz6XyjJ8rMnM=",
@@ -438,12 +438,6 @@
 		{
 			"path": "github.com/renier/xmlrpc",
 			"revision": ""
-		},
-		{
-			"checksumSHA1": "mtqT230FVjF5Hthk0iNg27o6UYo=",
-			"path": "github.com/softlayer/softlayer-go",
-			"revision": "b248bb399df4971d7911ba775b187ecee6260e75",
-			"revisionTime": "2018-03-31T16:36:37Z"
 		},
 		{
 			"checksumSHA1": "KeNIYJQUdE6o196SaYuLMmjEPZM=",

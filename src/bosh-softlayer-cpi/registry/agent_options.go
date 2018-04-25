@@ -7,25 +7,25 @@ import (
 // AgentOptions are the agent options passed to the the BOSH Agent (http://bosh.io/docs/bosh-components.html#agent).
 type AgentOptions struct {
 	// Mbus URI
-	Mbus string
+	Mbus string `json:"mbus"`
 
 	// List of NTP servers
-	Ntp []string
+	Ntp []string `json:"ntp"`
 
 	// Blobstore options
-	Blobstore BlobstoreOptions
+	Blobstore BlobstoreOptions `json:"blobstore"`
 
 	//The SHA-512 encrypted vcap password
-	VcapPassword string
+	VcapPassword string `json:"vcap_password"`
 }
 
 // BlobstoreOptions are the blobstore options passed to the BOSH Agent (http://bosh.io/docs/bosh-components.html#agent).
 type BlobstoreOptions struct {
 	// Blobstore provider
-	Provider string
+	Provider string `json:"provider"`
 
 	// Blobstore options
-	Options map[string]interface{}
+	Options map[string]interface{} `json:"options"`
 }
 
 // Validate validates the Agent options.
